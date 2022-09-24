@@ -1,6 +1,6 @@
 id,name,discovered,description,status
+4,Lost laptop,2018-02-19,Doctor lost her laptop while on vacation.,Done
+5,Lost iPad with medical record,2018-04-01,Nurse misplaced a patients medical record while in the office.,In progress
 1,Misdirected fax,2018-04-02,Patients medical records faxed to wrong number.,New
 2,Misdirected phone,2018-04-02,Patients medical records faxed to wrong number.,New
 3,Misdirected email,2018-04-02,Patient´s medical records faxed to wrong number.,New
-5,Lost iPad with medical record,2018-04-01,Nurse misplaced a patients medical record while in the office.,In progress
-4,Lost laptop,2018-02-19,Doctor lost her laptop while on vacation.,Done
