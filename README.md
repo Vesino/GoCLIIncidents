@@ -45,6 +45,12 @@ $ go run cmd/main.go -json-input=$BODY
 $ go run cmd/main.go -json-input=$BODY -sortdirection='descending' -sortfield='status'
 ```
 
+## Tests
+Execute tests cases written 
+```shell
+go test ./... -v
+```
+
 ## TODO
 Create and improve more Test Cases
 
