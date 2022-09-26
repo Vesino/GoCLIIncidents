@@ -2,7 +2,9 @@ package incident
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
+	"reflect"
 	"strings"
 	"time"
 )
@@ -13,6 +15,17 @@ type Incident struct {
 	Discovered  IncidentDiscovered `json:"discovered"`
 	Description string             `json:"description"`
 	Status      string             `json:"status"`
+}
+
+func GetColumnValue(i *Incident, column string) string {
+	e := reflect.ValueOf(i).Elem()
+
+	for i := 0; i < e.NumField(); i++ {
+		if e.Type().Field(i).Name == strings.Title(column) {
+			return fmt.Sprint(e.Field(i).Interface())
+		}
+	}
+	return ""
 }
 
 type IncidentDiscovered time.Time

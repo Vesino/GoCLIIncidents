@@ -15,6 +15,7 @@ import (
 // Therefore, map[string] struct{} is a popular choice for sets in the Go world.
 var validSortFields = map[string]struct{}{"discovered": {}, "status": {}}
 var validSortDirections = map[string]struct{}{"ascending": {}, "descending": {}}
+var validColumns = map[string]struct{}{"id": {}, "name": {}, "discovered": {}, "description": {}, "status": {}}
 
 func ValidateFlags(incidentInput, sortDirection, sortField string) error {
 	_, ok := validSortDirections[sortDirection]
@@ -33,23 +34,36 @@ func ValidateFlags(incidentInput, sortDirection, sortField string) error {
 }
 
 func SortIncidents(incidents []Incident, sortDirection, sortField string) {
+	direction := sortDirection == "ascending"
 
-	sort.Slice(incidents, func(i, j int) bool {
-		comparition := strings.Compare(incidents[i].Discovered.String(), incidents[j].Discovered.String())
-		if sortField == "status" {
-			comparition = strings.Compare(incidents[i].Status, incidents[j].Status)
-		}
-		switch comparition {
-		case -1:
-			return !(sortDirection == "ascending")
-		case 1:
-			return sortDirection == "ascending"
-		}
-		return incidents[i].Status > incidents[j].Status
-	})
+	switch sortField {
+	case "status":
+		sort.Slice(incidents, func(i, j int) bool {
+			if direction {
+				return incidentLessByDiscovered(incidents, i, j)
+			}
+			return !incidentLessByDiscovered(incidents, i, j)
+		})
+
+	case "discovered":
+		sort.Slice(incidents, func(i, j int) bool {
+			if direction {
+				return incidentLessByDiscovered(incidents, i, j)
+			}
+			return !incidentLessByDiscovered(incidents, i, j)
+		})
+	}
 }
 
-func CreateCSVfromIncidents(path string, incidents []Incident) {
+func incidentLessByStatus(incident []Incident, i, j int) bool {
+	return incident[i].Status < incident[j].Status
+}
+
+func incidentLessByDiscovered(incident []Incident, i, j int) bool {
+	return incident[i].Discovered.String() < incident[j].Discovered.String()
+}
+
+func CreateCSVfromIncidents(path string, incidents []Incident, columns []string) {
 	ouFile, err := os.Create(path)
 	if err != nil {
 		log.Fatalf("Error creating output file, %v", err)
@@ -60,14 +74,41 @@ func CreateCSVfromIncidents(path string, incidents []Incident) {
 	defer ouFile.Close()
 	defer writer.Flush()
 
-	if err := writer.Write([]string{"id", "name", "discovered", "description", "status"}); err != nil {
+	if err := writer.Write(columns); err != nil {
 		log.Fatalf("Error while writing header in csv %v\n", err)
 	}
 	for _, row := range incidents {
 		var csvRow []string
-		csvRow = append(csvRow, fmt.Sprint(row.Id), row.Name, row.Discovered.String(), row.Description, row.Status)
+		for _, columnName := range columns {
+			csvRow = append(csvRow, GetColumnValue(&row, columnName))
+		}
+
 		if err := writer.Write(csvRow); err != nil {
 			log.Fatalf("Error writing row: %v\n", err)
 		}
 	}
+}
+
+func ValidateColumns(columns string) ([]string, error) {
+
+	if columns == "" {
+		// all valid comlumns
+		return []string{"id", "name", "discovered", "description", "status"}, nil
+	}
+
+	sc := strings.Split(columns, ",")
+	selectedColumns := []string{}
+
+	for _, column := range sc {
+		selectedColumns = append(selectedColumns, strings.Trim(column, " "))
+	}
+
+	for _, column := range selectedColumns {
+		_, ok := validColumns[strings.Trim(column, " ")]
+		if !ok {
+			return nil, fmt.Errorf("Invalid column: %v, valida columns are: id, name, discovered, description, status", column)
+		}
+	}
+
+	return selectedColumns, nil
 }
