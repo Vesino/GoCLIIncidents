@@ -9,7 +9,7 @@ import (
 
 var columns string
 
-var incidentInput = flag.String("json-input", "", "Jsong paylod which contains incident data")
+var incidentInput = flag.String("json-input", "", "JSON payload which contains incident data")
 var sortDirection = flag.String("sortdirection", "ascending", "Sort columns in the specified direction, optional values: ascending or descending")
 var sortField = flag.String("sortfield", "discovered", "Sort columns by field, could, optional values: discovered or status")
 var csvPath = flag.String("path", "test.csv", "path to store the .csv file generated")
