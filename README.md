@@ -1,6 +1,6 @@
 # Mini Incident CLI
 
-Mini incident is a Go CLI tool that consumes privacy incidents formatted in JSON and output in specified sort order in CSV format, so it can be adapted in a web service output for a bulk DB insert.
+Mini incident is a CLI tool written in the Go programming language that consumes incidents formatted in JSON and outputs it in CSV format,  in specified sort order, so it can be adapted in a web service output for a bulk DB insert.
 
 
 ## Installation
@@ -46,7 +46,7 @@ $ go run cmd/main.go -json-input=$BODY -sortdirection='descending' -sortfield='s
 ```
 
 ## Tests
-Execute tests cases written 
+Execute test cases written 
 ```shell
 go test ./... -v
 ```
