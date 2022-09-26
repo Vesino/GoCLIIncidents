@@ -21,8 +21,6 @@ CLI arguments
     	Columns to output in CSV
   -json-input string
     	JSON payload which contains incident data
-  -path string
-    	path to store the .csv file generated (default "test.csv")
   -sortdirection string
     	Sort columns in the specified direction, optional values: ascending or descending (default "ascending")
   -sortfield string
@@ -43,6 +41,9 @@ BODY='[
 $ go run cmd/main.go -json-input=$BODY
 
 $ go run cmd/main.go -json-input=$BODY -sortdirection='descending' -sortfield='status'
+
+# Select specific columns
+$ go run cmd/main.go -json-input=$BODY -sortdirection='descending' -sortfield='status' -columns='id, name, status'
 ```
 
 ## Tests
@@ -52,7 +53,8 @@ go test ./... -v
 ```
 
 ## TODO
-Create and improve more Test Cases
+- Create and improve more Test Cases
+- Be able to store the CSV in a given path
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -12,7 +12,6 @@ var columns string
 var incidentInput = flag.String("json-input", "", "JSON payload which contains incident data")
 var sortDirection = flag.String("sortdirection", "ascending", "Sort columns in the specified direction, optional values: ascending or descending")
 var sortField = flag.String("sortfield", "discovered", "Sort columns by field, could, optional values: discovered or status")
-var csvPath = flag.String("path", "test.csv", "path to store the .csv file generated")
 
 func main() {
 	flag.StringVar(&columns, "columns", "", "Columns to output in CSV")
@@ -32,5 +31,5 @@ func main() {
 
 	incidents := incident.UnmarshallIncident(data)
 	incident.SortIncidents(incidents, *sortDirection, *sortField)
-	incident.CreateCSVfromIncidents(*csvPath, incidents, selectedColumns)
+	incident.CreateCSVfromIncidents("test.csv", incidents, selectedColumns)
 }
